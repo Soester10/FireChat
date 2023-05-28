@@ -7,14 +7,16 @@ import './App.css';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import { getFirestore } from "firebase/firestore";
 
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 
+// Function imports
+import { MyChatRooms, PublicChatRoom } from "./Functions/Chat/chat"
+
 // const firestore = firebase.firestore();
 // const analytics = firebase.analytics();
-
-// require('dotenv').config();
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -26,10 +28,15 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_MEASUREMENT_ID,
 };
 
+// initialize app
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
+// auth
 const auth = getAuth();
+
+// firestore db
+const db = getFirestore(app);
 
 function App() {
   const [user] = useAuthState(auth);
@@ -73,6 +80,8 @@ function Test1(){
   return (
     <>
       <p> Hello, {displayName} </p>
+      <p> <MyChatRooms /> </p>
+      <p> <PublicChatRoom db={db} auth={auth}/> </p>
       <p> <SignOut /> </p>
     </>
   )
