@@ -5,6 +5,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { getAuth } from "firebase/auth";
 import { serverTimestamp } from "firebase/firestore";
+import { Link } from 'react-router-dom';
 
 import React, { useRef, useState } from 'react';
 
@@ -15,6 +16,12 @@ function MyChatRooms(){
 }
 
 function PublicChatRoom(props){
+    return (
+        <Link to="/public-chat">Public Chat Room</Link>
+    )
+}
+
+function ChatRoom(props){
     // Public Chat Romm that anyone who's logged in can join 
     // and participate
 
@@ -49,6 +56,9 @@ function PublicChatRoom(props){
     }
 
     return (<>
+        <div className="App">
+        <header className="App-header">
+        <section>
         <main>
 
         {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} db={props.db} auth={props.auth} />)}
@@ -64,6 +74,9 @@ function PublicChatRoom(props){
         <button type="submit" disabled={!formValue}>🕊️</button>
 
         </form>
+        </section>
+        </header>
+        </div>
     </>)
 
 }
@@ -90,4 +103,4 @@ function ChatMessage(props){
 
 }
 
-export {MyChatRooms, PublicChatRoom};
+export {MyChatRooms, PublicChatRoom, ChatRoom};

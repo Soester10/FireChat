@@ -12,8 +12,17 @@ import { getFirestore } from "firebase/firestore";
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 
+// import { Routes, Route, Router, Link } from 'react-router-dom';
+
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useRoutes,
+} from "react-router-dom";
+
 // Function imports
-import { MyChatRooms, PublicChatRoom } from "./Functions/Chat/chat"
+import { MyChatRooms, PublicChatRoom, ChatRoom } from "./Functions/Chat/chat"
 
 // const firestore = firebase.firestore();
 // const analytics = firebase.analytics();
@@ -38,8 +47,9 @@ const auth = getAuth();
 // firestore db
 const db = getFirestore(app);
 
-function App() {
+function Home(){
   const [user] = useAuthState(auth);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -48,7 +58,32 @@ function App() {
         </section>
       </header>
     </div>
+  )
+}
+
+function AppRouter(){
+  let routes = useRoutes([
+    { path: "/", element: <Home /> },
+    { path: "/public-chat", element: <ChatRoom db={db} auth={auth}/> },
+  ]);
+  return routes;
+}
+
+function App() {
+  return (
+    <Router>
+      <AppRouter />
+    </Router>
   );
+  // return (
+  //   <>
+  //   <Router>
+  //     <Routes>
+  //         <Route path="/" element={<Home />} />
+  //     </Routes>
+  //   </Router>
+  //   </>
+  // );
 }
 
 function SignIn() {
