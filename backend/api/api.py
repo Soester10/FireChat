@@ -6,7 +6,7 @@ from firebase_admin import auth
 
 import os
 
-from .functions.users import users
+from .functions import users, token
 
 
 def api():
@@ -16,5 +16,6 @@ def api():
 
     app = Flask(__name__)
     app.register_blueprint(users, url_prefix="/users")
+    app.register_blueprint(token, url_prefix="/token")
 
     return app
