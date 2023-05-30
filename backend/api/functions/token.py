@@ -8,11 +8,12 @@ from firebase_admin import auth
 
 token = Blueprint("token", __name__)
 
+
 @token.route("/", methods=["GET"])
 def get_token():
     db = firestore.client()
-    uid = request.args.get('uid')   #127.0.0.1:5000/token?uid=abc
+    uid = request.args.get("uid")  # 127.0.0.1:5000/token?uid=abc
 
     custom_token = auth.create_custom_token(uid)
 
-    return jsonify({'token': custom_token.decode('UTF-8')})
+    return jsonify({"token": custom_token.decode("UTF-8")})
