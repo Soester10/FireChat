@@ -23,6 +23,7 @@ import {
 
 // Function imports
 import { MyChatRooms, PublicChatRoom, ChatRoom } from "./Functions/Chat/chat"
+import { Users } from "./Functions/Users/users"
 
 // const firestore = firebase.firestore();
 // const analytics = firebase.analytics();
@@ -65,6 +66,7 @@ function AppRouter(){
   let routes = useRoutes([
     { path: "/", element: <Home /> },
     { path: "/public-chat", element: <ChatRoom db={db} auth={auth}/> },
+    { path: "/users", element: <Users db={db} auth={auth}/> },
   ]);
   return routes;
 }

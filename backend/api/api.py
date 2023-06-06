@@ -1,21 +1,28 @@
-from flask import Flask
+from flask import Flask, Blueprint, jsonify
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 from firebase_admin import auth
 
 import os
+from dotenv import load_dotenv
+import subprocess
+import ast
+import base64
 
 from .functions import users, token
 
+load_dotenv()
 
-def api():
-    # Use a service account.
-    cred = credentials.Certificate("backend/api/serviceAccount.json")
+api = Blueprint("api", __name__)
+
+api.register_blueprint(users, url_prefix="/users")
+api.register_blueprint(token, url_prefix="/token")
+
+@api.route("/", methods=["GET"])
+def get_api():
+
+    cred = credentials.Certificate("serviceAccount.json")
     firebase_app = firebase_admin.initialize_app(cred)
 
-    app = Flask(__name__)
-    app.register_blueprint(users, url_prefix="/users")
-    app.register_blueprint(token, url_prefix="/token")
-
-    return app
+    return jsonify({"Result": "Api Initialized!"})
