@@ -1,5 +1,6 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import React, { useRef, useState, useEffect } from 'react';
 
 // import firebase from 'firebase/app';
 // import 'firebase/firestore';
@@ -9,8 +10,8 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
 
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useCollectionData } from "react-firebase-hooks/firestore";
 
 // import { Routes, Route, Router, Link } from 'react-router-dom';
 
@@ -22,8 +23,8 @@ import {
 } from "react-router-dom";
 
 // Function imports
-import { MyChatRooms, PublicChatRoom, ChatRoom } from "./Functions/Chat/chat"
-import { Users } from "./Functions/Users/users"
+import { MyChatRooms, PublicChatRoom, ChatRoom } from "./Functions/Chat/chat";
+import { Users, GetUsers } from "./Functions/Users/users";
 
 // const firestore = firebase.firestore();
 // const analytics = firebase.analytics();
@@ -48,25 +49,30 @@ const auth = getAuth();
 // firestore db
 const db = getFirestore(app);
 
-function Home(){
+// const [user_, setUser_] = useState('');
+
+function Home() {
   const [user] = useAuthState(auth);
 
   return (
     <div className="App">
       <header className="App-header">
         <section>
-          <h1> {user? <Test1 /> : <SignIn />} </h1>
+          <h1> {user ? <Test1 /> : <SignIn />} </h1>
         </section>
       </header>
     </div>
-  )
+  );
 }
 
-function AppRouter(){
+function AppRouter() {
   let routes = useRoutes([
     { path: "/", element: <Home /> },
-    { path: "/public-chat", element: <ChatRoom db={db} auth={auth}/> },
-    { path: "/users", element: <Users db={db} auth={auth}/> },
+    { path: "/public-chat", element: <ChatRoom db={db} auth={auth} /> },
+    {
+      path: "/users",
+      element: <Users db={db} auth={auth} user_={auth.currentUser} />,
+    },
   ]);
   return routes;
 }
@@ -93,43 +99,69 @@ function SignIn() {
   const GoogleSignIn = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider);
-  //     .then((result) => {
-  //       // checkout more at https://firebase.google.com/docs/auth/web/google-signin
-  //     }).catch((error) => {
-  //       const errorCode = error.code;
-  //       const errorMessage = error.message;
+    //     .then((result) => {
+    //       // checkout more at https://firebase.google.com/docs/auth/web/google-signin
+    //     }).catch((error) => {
+    //       const errorCode = error.code;
+    //       const errorMessage = error.message;
 
-  //       console.log(errorMessage);
-  //     });
-  }
+    //       console.log(errorMessage);
+    //     });
+  };
 
   return (
     <>
-      <button className='sign-in' onClick={GoogleSignIn}>Sign In</button>
+      <button className="sign-in" onClick={GoogleSignIn}>
+        Sign In
+      </button>
     </>
-  )
+  );
 }
 
-function Test1(){
+function Test1() {
   const user = auth.currentUser;
   const displayName = user.displayName;
+
+  // const updateUser = () => {
+  //   setUser_(user);
+  // }
+
+  // useEffect(() => {
+  //   updateUser()
+  // }, [])
 
   return (
     <>
       <p> Hello, {displayName} </p>
-      <p> <MyChatRooms /> </p>
-      <p> <PublicChatRoom db={db} auth={auth}/> </p>
-      <p> <SignOut /> </p>
+      <p>
+        {" "}
+        <MyChatRooms />{" "}
+      </p>
+      <p>
+        {" "}
+        <PublicChatRoom db={db} auth={auth} />{" "}
+      </p>
+      <p>
+        {" "}
+        <GetUsers db={db} auth={auth} />{" "}
+      </p>
+      <p>
+        {" "}
+        <SignOut />{" "}
+      </p>
     </>
-  )
-
+  );
 }
 
-function SignOut(){
+function SignOut() {
   const user = auth.currentUser;
-  return user && (
-    <button className="sign-out" onClick={() => auth.signOut()}>Sign Out</button>
-  )
+  return (
+    user && (
+      <button className="sign-out" onClick={() => auth.signOut()}>
+        Sign Out
+      </button>
+    )
+  );
 }
 
 export default App;

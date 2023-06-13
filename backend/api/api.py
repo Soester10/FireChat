@@ -19,9 +19,9 @@ api = Blueprint("api", __name__)
 api.register_blueprint(users, url_prefix="/users")
 api.register_blueprint(token, url_prefix="/token")
 
+
 @api.route("/", methods=["GET"])
 def get_api():
-
     cred = credentials.Certificate("serviceAccount.json")
     firebase_app = firebase_admin.initialize_app(cred)
 
