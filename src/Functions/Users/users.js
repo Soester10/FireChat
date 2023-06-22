@@ -162,14 +162,14 @@ function ListUsers(props){
     const [users, setUsers] = useState([]);
 
     const fetchData = async () => {
-        // fetch("http://firechat-api.us-east-1.elasticbeanstalk.com/users/get-all?token=")
         try{
         const token = await props.user.getIdToken();
-        fetch("http://127.0.0.1:5000/users/get-all?token=" + token)
+        // fetch("http://127.0.0.1:5000/users/get-all?token=" + token)
+        fetch("http://firechat-api.us-east-1.elasticbeanstalk.com/users/get-all?token=" + token)
             .then((response) => response.json())
             .then((result) => {
                 setUsers(result);
-                console.log("http://127.0.0.1:5000/users/get-all?token=" + props.user.getIdToken());
+                // console.log("http://127.0.0.1:5000/users/get-all?token=" + props.user.getIdToken());
             });
         }
         catch{}
@@ -213,9 +213,14 @@ function ListLoading(props){
 
 
 function DisplayUser(id, user){
+    const userData = {
+        target: user.uid,
+    };
+
     return (
        <div key={id}>
-            {user.name}
+            {/* <Link to={{ pathname:"/chat", query:{'target':user.uid} }}>{user.name}</Link> */}
+            <Link to="/chat" state={userData}>{user.name}</Link>
        </div>
     )
 }

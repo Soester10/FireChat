@@ -25,6 +25,7 @@ import {
 // Function imports
 import { MyChatRooms, PublicChatRoom, ChatRoom } from "./Functions/Chat/chat";
 import { Users, GetUsers } from "./Functions/Users/users";
+import { Connections } from "./Functions/Users/connections"
 
 // const firestore = firebase.firestore();
 // const analytics = firebase.analytics();
@@ -73,6 +74,7 @@ function AppRouter() {
       path: "/users",
       element: <Users db={db} auth={auth} user_={auth.currentUser} />,
     },
+    { path: "/chat", element: <Connections db={db}/> },
   ]);
   return routes;
 }

@@ -19,12 +19,7 @@ def get_users_list():
         decoded_token = auth.verify_id_token(id_token)
         uid = decoded_token["uid"]
     except:
-        # return jsonify({"Result": "Error!"})
-        ## for testing
-        uid = "test"
-        pass
-
-    # uid = decoded_token["uid"]
+        return jsonify({"Result": "Error!"})
 
     users_json = []
 
@@ -36,8 +31,6 @@ def get_users_list():
             users_json.append(user_json)
         # Get next batch of users.
         page = page.get_next_page()
-    
-    users_json.append({'name': uid})
 
     return jsonify(users_json)
 

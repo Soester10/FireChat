@@ -55,6 +55,8 @@ function ChatRoom(props){
         dummy.current.scrollIntoView({ behavior: 'smooth' });
     }
 
+    // console.log("here");
+
     return (<>
         <div className="App">
         <header className="App-header">
@@ -95,7 +97,7 @@ function ChatMessage(props){
     // if (username.exists())
 
     return (<>
-        <div className={`message ${messageClass}`}>
+        <div className={`message ${messageClass}`} key={props.key}>
             
             <p>{username} : {text}</p>
         </div>

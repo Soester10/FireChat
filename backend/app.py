@@ -20,14 +20,6 @@ app.register_blueprint(token, url_prefix="/token")
 cred = credentials.Certificate("serviceAccount.json")
 firebase_app = firebase_admin.initialize_app(cred)
 
-@app.route("/", methods=["GET"])
-def test2():
-    db = firestore.client()
-    mes_ref = db.collection("messages").stream()
-    mess = [mes.to_dict() for mes in mes_ref]
-
-    return jsonify(mess)
-
 
 if __name__ == "__main__":
     app.run(debug=True)
