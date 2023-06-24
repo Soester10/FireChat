@@ -7,7 +7,9 @@ import { getAuth } from "firebase/auth";
 import { serverTimestamp } from "firebase/firestore";
 import { Link } from 'react-router-dom';
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
+
+import useFetchMessages from "./messages"
 
 
 function MyChatRooms(){
@@ -25,10 +27,31 @@ function ChatRoom(props){
     // Public Chat Romm that anyone who's logged in can join 
     // and participate
 
-    const messagesRef = collection(props.db, 'messages');
-    const messages_ = query(messagesRef, orderBy('timestamp'), limit(25));
+    const [pageNumber, setPageNumber] = useState(0);
+    const [newMessage, setNewMessage] = useState(false);
+    
+    const {
+        messages,
+        hasMore,
+        loading,
+    } = useFetchMessages(pageNumber, newMessage);
 
-    const [messages] = useCollectionData(messages_, { idField: 'id' });
+    const observer = useRef()
+    const lastMsgElementRef = useCallback(node => {
+        if (loading) return(<ListLoading />)
+        if (observer.current) observer.current.disconnect()
+        observer.current = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting && hasMore) {
+            setPageNumber(prevPageNumber => prevPageNumber + 1)
+        }
+        })
+        if (node) observer.current.observe(node)
+    }, [loading, hasMore])
+
+    const messagesRef = collection(props.db, 'messages');
+    // const messages_ = query(messagesRef, orderBy('timestamp'), limit(25));
+
+    // const [messages] = useCollectionData(messages_, { idField: 'id' });
 
     const [formValue, setFormValue] = useState('');
 
@@ -52,10 +75,21 @@ function ChatRoom(props){
         })
 
         setFormValue('');
+        setPageNumber(0);
+        setNewMessage(oldMessage => !oldMessage);
+
+        // messages, hasMore, loading = useFetchMessages(pageNumber);
+
         dummy.current.scrollIntoView({ behavior: 'smooth' });
     }
 
-    // console.log("here");
+    useEffect(() => {
+        dummy.current.scrollIntoView({ behavior: 'smooth' });
+    }, [messages])
+
+    // if(loading){
+    //     return(<ListLoading />)
+    // }
 
     return (<>
         <div className="App">
@@ -63,7 +97,9 @@ function ChatRoom(props){
         <section>
         <main>
 
-        {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} db={props.db} auth={props.auth} />)}
+        {/* {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} db={props.db} auth={props.auth} />)} */}
+        {messages && messages.map((msg, index) => <ChatMessage key={index} message={msg} db={props.db} auth={props.auth} index={index} length={messages.length} lastMsgElementRef={lastMsgElementRef} />)}
+
 
         <span ref={dummy}></span>
 
@@ -85,7 +121,12 @@ function ChatRoom(props){
 
 
 function ChatMessage(props){
-    const {uid, text, username} = props.message;
+    // const {uid, text, username, timestamp} = props.message;
+    const message = props.message.split("/stipltz/");
+    const text = message[0];
+    const timestamp = message[1];
+    const uid = message[2];
+    const username = message[3];
 
     const messageClass = uid === props.auth.currentUser.uid ? 'sent' : 'received';
 
@@ -96,13 +137,34 @@ function ChatMessage(props){
 
     // if (username.exists())
 
-    return (<>
-        <div className={`message ${messageClass}`} key={props.key}>
-            
-            <p>{username} : {text}</p>
-        </div>
-    </>)
+    if (props.length-1 == props.index){
+        return (<>
+            <div ref={props.lastMsgElementRef} className={`message ${messageClass}`}>
+                <p>{username} : {text}</p>
+            </div>
+        </>)
+    }
 
+    else{
+        return (<>
+            <div className={`message ${messageClass}`}>
+                <p>{username} : {text}</p>
+            </div>
+        </>)
+    }
+
+}
+
+function ListLoading(props){
+    return (
+        <div className="App">
+        <header className="App-header">
+        <section>
+            <p>Loading ...</p>
+        </section>
+        </header>
+        </div>
+    )
 }
 
 export {MyChatRooms, PublicChatRoom, ChatRoom};
