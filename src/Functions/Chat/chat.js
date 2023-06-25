@@ -29,12 +29,13 @@ function ChatRoom(props){
 
     const [pageNumber, setPageNumber] = useState(0);
     const [newMessage, setNewMessage] = useState(false);
+    const recipient = '';
     
     const {
         messages,
         hasMore,
         loading,
-    } = useFetchMessages(pageNumber, newMessage);
+    } = useFetchMessages(pageNumber, newMessage, recipient);
 
     const observer = useRef()
     const lastMsgElementRef = useCallback(node => {
@@ -98,7 +99,7 @@ function ChatRoom(props){
         <main>
 
         {/* {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} db={props.db} auth={props.auth} />)} */}
-        {messages && messages.map((msg, index) => <ChatMessage key={index} message={msg} db={props.db} auth={props.auth} index={index} length={messages.length} lastMsgElementRef={lastMsgElementRef} />)}
+        {messages && messages.map((msg, index) => <ChatMessage key={index} message={msg} auth={props.auth} index={index} length={messages.length} lastMsgElementRef={lastMsgElementRef} />)}
 
 
         <span ref={dummy}></span>
@@ -122,7 +123,9 @@ function ChatRoom(props){
 
 function ChatMessage(props){
     // const {uid, text, username, timestamp} = props.message;
-    const message = props.message.split("/stipltz/");
+    const split_placeholder = process.env.REACT_APP_MSG_SPLIT_THINGY;
+    
+    const message = props.message.split(split_placeholder);
     const text = message[0];
     const timestamp = message[1];
     const uid = message[2];
@@ -137,7 +140,7 @@ function ChatMessage(props){
 
     // if (username.exists())
 
-    if (props.length-1 == props.index){
+    if (props.length-1 === props.index){
         return (<>
             <div ref={props.lastMsgElementRef} className={`message ${messageClass}`}>
                 <p>{username} : {text}</p>

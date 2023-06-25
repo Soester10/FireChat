@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 import React, { useRef, useState, useEffect } from 'react';
 
 
-function useFetchMessages(pageNumber, newMessage){
+function useFetchMessages(pageNumber, newMessage, recipient){
     const [loading, setLoading] = useState(true);
     const [messages, setMessages] = useState([]);
     const [hasMore, setHasMore] = useState(false);
@@ -24,7 +24,7 @@ function useFetchMessages(pageNumber, newMessage){
         // const token = await props.user.getIdToken();
 
         // fetch("http://firechat-api.us-east-1.elasticbeanstalk.com/users/get-all?token=" + token)
-        fetch("http://127.0.0.1:5000/messages/?page=" + pageNumber)
+        fetch("http://127.0.0.1:8000/messages/?page=" + pageNumber + "&recipient=" + recipient)
             .then((response) => response.json())
             .then((result) => {
                 // setUsers(result);

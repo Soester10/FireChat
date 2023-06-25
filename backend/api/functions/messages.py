@@ -16,14 +16,17 @@ def get_messages():
     ##page_no starts from 0
     page_no = int(request.args.get("page"))  # 127.0.0.1:5000/messages?page=0
     ##TODO: Fix for recipient
-    recipient = request.args.get("recipient")  # 127.0.0.1:5000/messages?page=0?recipient=abc
+    recipient = request.args.get("recipient")  # 127.0.0.1:5000/messages?page=0&recipient=abc
+
+    ##TODO: need to get uid from token
+    uid = ""
 
     if recipient:
-        mes_ref = db.collection("messages").where("recipient", "==", str(recipient))
-        mes_query = mes_ref.order_by("timestamp").limit(num_msgs_to_load)
-        msgs = mes_query.stream()
-        msgs = [msg.to_dict() for msg in msgs]
-        return jsonify(msgs) 
+        mes_ref = db.collection("messages").where("uid", "==", str(uid)).where("recipient", "==", str(recipient))
+        # mes_query = mes_ref.order_by("timestamp").limit(num_msgs_to_load)
+        # msgs = mes_query.stream()
+        # msgs = [msg.to_dict() for msg in msgs]
+        # return jsonify(msgs) 
     else:
         mes_ref = db.collection("messages")
 

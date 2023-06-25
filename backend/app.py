@@ -23,6 +23,6 @@ firebase_app = firebase_admin.initialize_app(cred)
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(port=8000, debug=True)
 
 
