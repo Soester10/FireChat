@@ -26,6 +26,8 @@ import {
 import { MyChatRooms, PublicChatRoom, ChatRoom } from "./Functions/Chat/chat";
 import { Users, GetUsers } from "./Functions/Users/users";
 import { Connections } from "./Functions/Users/connections"
+import { SearchMovies } from "./Functions/Movies/search"
+import { MovieDetails } from "./Functions/Movies/movieDetails"
 
 // const firestore = firebase.firestore();
 // const analytics = firebase.analytics();
@@ -75,6 +77,8 @@ function AppRouter() {
       element: <Users db={db} auth={auth} user_={auth.currentUser} />,
     },
     { path: "/chat", element: <Connections db={db}/> },
+    { path: "/movies", element: <SearchMovies db={db} auth={auth}/> },
+    { path: "/movies/:movie", element: <MovieDetails db={db} auth={auth}/> },
   ]);
   return routes;
 }

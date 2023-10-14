@@ -18,6 +18,10 @@ function useFetchMessages(pageNumber, newMessage, recipient){
     const split_placeholder = process.env.REACT_APP_MSG_SPLIT_THINGY;
 
     useEffect(() => {
+        setMessages([]);
+    }, [newMessage]);
+
+    useEffect(() => {
         setLoading(true);
         console.log("inside");
         // TODO:refer this for async call with token from jwt: https://devtrium.com/posts/async-functions-useeffect
@@ -47,10 +51,12 @@ function useFetchMessages(pageNumber, newMessage, recipient){
                 //     })])]
                 // })
 
+                result = result.reverse();
+
                 setMessages(prevMsgs => {
-                    return [...new Set([...prevMsgs, ...result.map(msg => {
+                    return [...new Set([...result.map(msg => {
                         return (msg.text + split_placeholder + msg.timestamp + split_placeholder + msg.uid + split_placeholder + msg.username)
-                    })])]
+                    }), ...prevMsgs])]
                 })
 
                 setHasMore(result.length === 5);

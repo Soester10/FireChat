@@ -10,5 +10,6 @@ module.exports = {
         REACT_APP_APP_ID: process.env.REACT_APP_APP_ID,
         REACT_APP_MEASUREMENT_ID: process.env.REACT_APP_MEASUREMENT_ID,
         REACT_APP_MSG_SPLIT_THINGY: process.env.REACT_APP_MSG_SPLIT_THINGY,
+        REACT_APP_OMDB_API_KEY: process.env.REACT_APP_OMDB_API_KEY,
     },
 };

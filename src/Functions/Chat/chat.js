@@ -140,7 +140,8 @@ function ChatMessage(props){
 
     // if (username.exists())
 
-    if (props.length-1 === props.index){
+    // if (props.length-1 === props.index){
+    if (0 === props.index){
         return (<>
             <div ref={props.lastMsgElementRef} className={`message ${messageClass}`}>
                 <p>{username} : {text}</p>
